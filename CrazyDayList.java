@@ -9,10 +9,5 @@
 /*============================================================================*/
 
 public class CrazyDayList {
-  private class node {
-    StockDay stockData;
-    node next;
 
-    public node(StockDay new)
-  }
 }

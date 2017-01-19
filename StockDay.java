@@ -21,8 +21,14 @@ public class StockDay {
   public StockDay( String ticker, String date, float openingPrice,
   float highPrice, float lowPrice, float closingPrice, int volumeOfShares,
   float adjustedClosingPrice ) {
-    System.out.println(ticker);
 
 
+  }
+
+  public boolean checkCrazyDay(StockDay first, StockDay second) {
+
+    System.out.println(first.ticker);
+
+    return true;
   }
 }

@@ -28,12 +28,15 @@ public class Assignment1 {
       buffRead = new BufferedReader(fileRead);
 
       String currLine;
+      StockDay prevDay = null;
+      StockDay currDay = null;
 
       // Iterate through the lines in the file
       while ((currLine = buffRead.readLine()) != null) {
 
           String[] splitString = currLine.split("\t");
 
+          // Create a StockDay Object
           String ticker = splitString[0];
           String date = splitString[1];
           float openingPrice = Float.parseFloat(splitString[2]);
@@ -43,10 +46,24 @@ public class Assignment1 {
           int volumeOfShares = Integer.parseInt(splitString[6]);
           float adjustedClosingPrice = Float.parseFloat(splitString[7]);
 
-          StockDay thisDay = new StockDay(ticker, date, openingPrice, highPrice,
+          if (prevDay != null) {
+            prevDay = currDay;
+          }
+          currDay = new StockDay(ticker, date, openingPrice, highPrice,
           lowPrice, closingPrice, volumeOfShares, adjustedClosingPrice);
 
+          if (prevDay != null) {}
+          System.out.println("Result: " + currDay.checkCrazyDay(prevDay, currDay));
       }
+
+
+
+
+
+
+
+
+
     } catch (IOException e) {
       e.printStackTrace();
     } finally {
