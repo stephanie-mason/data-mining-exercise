@@ -14,6 +14,7 @@
 import java.io.FileReader;
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class Assignment1 {
   public static void main(String[] args) {
@@ -21,6 +22,9 @@ public class Assignment1 {
     String inputFileName = "test.txt";
     BufferedReader buffRead = null;
     FileReader fileRead = null;
+
+    //Create an ArrayList to hold crazy days
+    ArrayList<StockDay> crazyDays = new ArrayList<StockDay>();
 
     // Read input file
     try {
@@ -46,15 +50,24 @@ public class Assignment1 {
           int volumeOfShares = Integer.parseInt(splitString[6]);
           float adjustedClosingPrice = Float.parseFloat(splitString[7]);
 
-          if (prevDay != null) {
-            prevDay = currDay;
-          }
+          if (prevDay != null) prevDay = currDay;
           currDay = new StockDay(ticker, date, openingPrice, highPrice,
           lowPrice, closingPrice, volumeOfShares, adjustedClosingPrice);
 
-          if (prevDay != null) {}
-          System.out.println("Result: " + currDay.checkCrazyDay(prevDay, currDay));
+          if (currDay.isCrazyDay()){
+            crazyDays.add(currDay);
+
+            // Keep track of craziest day
+          }
+
+          // Check for stock splits
+          if (prevDay != null) {
+
+          }
       }
+
+      System.out.println("Crazy days:" + crazyDays.get(0).ticker);
+
 
 
 
