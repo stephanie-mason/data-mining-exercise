@@ -43,11 +43,24 @@ public class StockDay {
   // a crazy day is defined as a day in which the price fluctiation is greater
   // than 15%
   public boolean isCrazyDay() {
-    float priceDif = (highPrice-lowPrice)/highPrice;
+    float priceDif = getPriceDif();
     if (priceDif >= 0.15){
       return true;
     }
     return false;
+  }
+
+  public float getPriceDif() {
+    float priceDif = (highPrice-lowPrice)/highPrice;
+    return priceDif;
+  }
+
+  public String getTicker() {
+    return this.ticker;
+  }
+
+  public String getDate() {
+    return this.date;
   }
 
 }

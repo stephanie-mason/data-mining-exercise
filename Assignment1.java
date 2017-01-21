@@ -32,8 +32,11 @@ public class Assignment1 {
       buffRead = new BufferedReader(fileRead);
 
       String currLine;
+      String currTicker = "none";
+      String prevTicker = "none";
       StockDay prevDay = null;
       StockDay currDay = null;
+      StockDay craziestDay = null;
 
       // Iterate through the lines in the file
       while ((currLine = buffRead.readLine()) != null) {
@@ -50,32 +53,33 @@ public class Assignment1 {
           int volumeOfShares = Integer.parseInt(splitString[6]);
           float adjustedClosingPrice = Float.parseFloat(splitString[7]);
 
-          if (prevDay != null) prevDay = currDay;
           currDay = new StockDay(ticker, date, openingPrice, highPrice,
           lowPrice, closingPrice, volumeOfShares, adjustedClosingPrice);
+          currTicker = currDay.getTicker();
+          if (prevDay != null) {
+            prevDay = currDay;
+            prevTicker = prevDay.getTicker();
+          }
+
+
+
+          System.out.println("prevTicker: " + prevTicker);
+          System.out.println("currTicker: " + currTicker);
 
           if (currDay.isCrazyDay()){
             crazyDays.add(currDay);
 
             // Keep track of craziest day
+            if (craziestDay == null)
+              craziestDay = currDay;
+            else if (currDay.getPriceDif() > craziestDay.getPriceDif())
+              craziestDay = currDay;
           }
 
-          // Check for stock splits
-          if (prevDay != null) {
-
-          }
+          prevDay = currDay;
       }
 
-      System.out.println("Crazy days:" + crazyDays.get(0).ticker);
-
-
-
-
-
-
-
-
-
+      printOutput(crazyDays, craziestDay);
 
     } catch (IOException e) {
       e.printStackTrace();
@@ -91,6 +95,17 @@ public class Assignment1 {
         ex.printStackTrace();
       }
     }
+  }
+
+  private static void printOutput(ArrayList<StockDay> crazyDays, StockDay craziestDay) {
+    int numCrazyDays = crazyDays.size();
+    for (int i = 0; i < numCrazyDays; i++) {
+      StockDay thisDay = crazyDays.get(i);
+      float fluctuation = thisDay.getPriceDif()*100;
+      System.out.println("Crazy day: " + thisDay.getDate() + " " + String.format("%.2f", fluctuation) + "%");
+    }
+    System.out.println("Total crazy days: " + crazyDays.size());
+    System.out.println("The craziest day: " + craziestDay.getDate());
   }
 
 }
