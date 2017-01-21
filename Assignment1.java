@@ -18,19 +18,17 @@ import java.util.ArrayList;
 
 public class Assignment1 {
   public static void main(String[] args) {
-    //String inputFileName = "Stockmarket-1990-2015.txt";
-    String inputFileName = "test.txt";
+    String inputFileName = "Stockmarket-1990-2015.txt";
+    //String inputFileName = "test.txt";
     BufferedReader buffRead = null;
     FileReader fileRead = null;
-
-    //Create an ArrayList to hold crazy days
-    ArrayList<StockDay> crazyDays = new ArrayList<StockDay>();
 
     // Read input file
     try {
       fileRead = new FileReader(inputFileName);
       buffRead = new BufferedReader(fileRead);
 
+      ArrayList<StockDay> crazyDays = new ArrayList<StockDay>();
       String currLine;
       String currTicker = "none";
       String prevTicker = "none";
@@ -57,14 +55,23 @@ public class Assignment1 {
           lowPrice, closingPrice, volumeOfShares, adjustedClosingPrice);
           currTicker = currDay.getTicker();
           if (prevDay != null) {
-            prevDay = currDay;
             prevTicker = prevDay.getTicker();
+            prevDay = currDay;
           }
 
+          // Check for new company ticker
+          // If the company ticker has changed, print the output and reset
+          // the crazy days
+          if (!prevTicker.equals(currTicker) && !prevTicker.equals("none")) {
+            System.out.println("Processing " + prevTicker);
+            System.out.println("===================================");
 
+            printOutput(crazyDays, craziestDay);
+            crazyDays = new ArrayList<StockDay>();
+            craziestDay = null;
 
-          System.out.println("prevTicker: " + prevTicker);
-          System.out.println("currTicker: " + currTicker);
+            System.out.println();
+          }
 
           if (currDay.isCrazyDay()){
             crazyDays.add(currDay);
@@ -79,7 +86,12 @@ public class Assignment1 {
           prevDay = currDay;
       }
 
+      // Print output for final company
+      System.out.println("Processing " + prevTicker);
+      System.out.println("===================================");
       printOutput(crazyDays, craziestDay);
+      System.out.println();
+
 
     } catch (IOException e) {
       e.printStackTrace();
@@ -104,8 +116,9 @@ public class Assignment1 {
       float fluctuation = thisDay.getPriceDif()*100;
       System.out.println("Crazy day: " + thisDay.getDate() + " " + String.format("%.2f", fluctuation) + "%");
     }
-    System.out.println("Total crazy days: " + crazyDays.size());
-    System.out.println("The craziest day: " + craziestDay.getDate());
+    System.out.println("Total crazy days: " + numCrazyDays);
+    if (numCrazyDays != 0)
+      System.out.println("The craziest day: " + craziestDay.getDate());
   }
 
 }
