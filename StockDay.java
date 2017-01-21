@@ -17,18 +17,37 @@
 /*============================================================================*/
 
 public class StockDay {
+  String ticker;
+  String date;
+  float openingPrice;
+  float highPrice;
+  float lowPrice;
+  float closingPrice;
+  int volumeOfShares;
+  float adjustedClosingPrice;
 
   public StockDay( String ticker, String date, float openingPrice,
   float highPrice, float lowPrice, float closingPrice, int volumeOfShares,
   float adjustedClosingPrice ) {
-
-
+    this.ticker = ticker;
+    this.date = date;
+    this.openingPrice = openingPrice;
+    this.highPrice = highPrice;
+    this.lowPrice = lowPrice;
+    this.closingPrice = closingPrice;
+    this.volumeOfShares = volumeOfShares;
+    this.adjustedClosingPrice = adjustedClosingPrice;
   }
 
-  public boolean checkCrazyDay(StockDay first, StockDay second) {
-
-    System.out.println(first.ticker);
-
-    return true;
+  // Check for Crazy Days
+  // a crazy day is defined as a day in which the price fluctiation is greater
+  // than 15%
+  public boolean isCrazyDay() {
+    float priceDif = (highPrice-lowPrice)/highPrice;
+    if (priceDif >= 0.15){
+      return true;
+    }
+    return false;
   }
+
 }
