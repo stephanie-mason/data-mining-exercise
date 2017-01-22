@@ -29,7 +29,7 @@ public class Assignment1 {
       fileRead = new FileReader(inputFileName);
       buffRead = new BufferedReader(fileRead);
 
-      ArrayList<StockDay> splits = new ArrayList<StockDay>();
+      ArrayList<Split> splits = new ArrayList<Split>();
       ArrayList<StockDay> crazyDays = new ArrayList<StockDay>();
       String currLine;
       String currTicker = "none";
@@ -42,7 +42,7 @@ public class Assignment1 {
       while ((currLine = buffRead.readLine()) != null) {
         String[] splitString = currLine.split("\t");
 
-        // Create a StockDay Object
+        // Create a StockDay Object for the current line
         String ticker = splitString[0];
         String date = splitString[1];
         float openingPrice = Float.parseFloat(splitString[2]);
@@ -63,10 +63,9 @@ public class Assignment1 {
         // If the company ticker has changed, print the output and reset vars
         if (!prevTicker.equals(currTicker) && !prevTicker.equals("none")) {
           System.out.println("Processing " + prevTicker);
-          System.out.println("===================================");
 
           printOutput(splits, crazyDays, craziestDay);
-          splits = new ArrayList<StockDay>();
+          splits = new ArrayList<Split>();
           crazyDays = new ArrayList<StockDay>();
           craziestDay = null;
 
@@ -87,28 +86,37 @@ public class Assignment1 {
         // Check for splits
         // Keep in mind that in this case, prevDay is the day on the previous
         // line, but because the days are listed in revers chronological order
-        // prevDay is actually the next day
+        // prevDay is actually the following day
         if (prevDay != null) {
           float currClosePrice = currDay.getClosingPrice();
           float prevOpenPricePrice = prevDay.getOpeningPrice();
+          boolean didSplit = false;
+          String splitType = "none";
 
           // 2:1 split
           if (Math.abs((currClosePrice/prevOpenPricePrice) - 2.0) < 0.05) {
-            Split currSplit = new Split(
-            "2:1", currDay.getDate(), currClosePrice, prevOpenPricePrice
-            );
-
-            System.out.println(currSplit.getType() + " split on "
-            + currSplit.getDate() + "\t"
-            + currSplit.getClosingPrice() + " -->\t"
-            + currSplit.getOpeningPrice());
+            didSplit = true;
+            splitType = "2:1";
           }
 
           // 3:1 split
-          //if ((result - 3.0) < 0.05)
+          if (Math.abs((currClosePrice/prevOpenPricePrice) - 3.0) < 0.05) {
+            didSplit = true;
+            splitType = "3:1";
+          }
 
           // 3:2 split
-          //if ((result - 1.5 < 0.05))
+          if (Math.abs((currClosePrice/prevOpenPricePrice) - 1.5) < 0.05) {
+            didSplit = true;
+            splitType = "3:2";
+          }
+
+          if (didSplit == true) {
+            Split currSplit = new Split(
+            splitType, currDay.getDate(), currClosePrice, prevOpenPricePrice
+            );
+            splits.add(currSplit);
+          }
         }
 
         prevDay = currDay;
@@ -116,10 +124,8 @@ public class Assignment1 {
 
       // Print output for final company
       System.out.println("Processing " + prevTicker);
-      System.out.println("===================================");
       printOutput(splits, crazyDays, craziestDay);
       System.out.println();
-
 
     } catch (IOException e) {
       e.printStackTrace();
@@ -137,22 +143,42 @@ public class Assignment1 {
     }
   }
 
-  private static void printOutput(ArrayList<StockDay> splits,
+  private static void printOutput(ArrayList<Split> splits,
   ArrayList<StockDay> crazyDays, StockDay craziestDay) {
     int numCrazyDays = crazyDays.size();
+    int numSplits = splits.size();
+
+    System.out.println("===================================\n");
+
     for (int i = 0; i < numCrazyDays; i++) {
       StockDay thisDay = crazyDays.get(i);
       float fluctuation = thisDay.getPriceDif()*100;
 
       System.out.println("Crazy day: "
-      + thisDay.getDate() + " "
-      + String.format("%.2f", fluctuation)
-      + "%");
+        + thisDay.getDate() + " "
+        + String.format("%.2f", fluctuation)
+        + "%"
+      );
     }
-    
     System.out.println("Total crazy days: " + numCrazyDays);
     if (numCrazyDays != 0)
-    System.out.println("The craziest day: " + craziestDay.getDate());
+    System.out.println("The craziest day: "
+      + craziestDay.getDate() + " "
+      + String.format("%.2f", craziestDay.getPriceDif()*100) + "%"
+    );
+
+    System.out.println();
+
+    for (int i = 0; i < numSplits; i++) {
+      Split thisSplit = splits.get(i);
+      System.out.println(thisSplit.getType() + " split on "
+        + thisSplit.getDate() + "\t"
+        + String.format("%.2f", thisSplit.getClosingPrice()) + " --> "
+        + String.format("%.2f", thisSplit.getOpeningPrice())
+      );
+    }
+    System.out.println("Total number of splits: " + numSplits);
+
   }
 
 }
