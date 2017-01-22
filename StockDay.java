@@ -3,7 +3,7 @@
 |                                                                              |
 | Used by Assignment1.java                                                     |
 |                                                                              |
-| Creates a stock object with:                                                 |
+| Creates a stock day object with:                                                 |
 | * ticker symbol                                                              |
 | * date                                                                       |
 | * opening price                                                              |
@@ -50,23 +50,20 @@ public class StockDay {
     return false;
   }
 
+  // Methods to return attributes
   public float getPriceDif() {
     float priceDif = (highPrice-lowPrice)/highPrice;
     return priceDif;
   }
-
   public String getTicker() {
     return this.ticker;
   }
-
   public String getDate() {
     return this.date;
   }
-
   public float getOpeningPrice() {
     return this.openingPrice;
   }
-
   public float getClosingPrice(){
     return this.closingPrice;
   }

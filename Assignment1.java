@@ -20,7 +20,6 @@ import java.lang.Math;
 public class Assignment1 {
   public static void main(String[] args) {
     String inputFileName = "Stockmarket-1990-2015.txt";
-    //String inputFileName = "test.txt";
     BufferedReader buffRead = null;
     FileReader fileRead = null;
 
@@ -52,6 +51,7 @@ public class Assignment1 {
         int volumeOfShares = Integer.parseInt(splitString[6]);
         float adjustedClosingPrice = Float.parseFloat(splitString[7]);
 
+        // Update holder variables
         currDay = new StockDay(ticker, date, openingPrice, highPrice,
         lowPrice, closingPrice, volumeOfShares, adjustedClosingPrice);
         currTicker = currDay.getTicker();
@@ -98,13 +98,11 @@ public class Assignment1 {
             didSplit = true;
             splitType = "2:1";
           }
-
           // 3:1 split
           if (Math.abs((currClosePrice/prevOpenPricePrice) - 3.0) < 0.05) {
             didSplit = true;
             splitType = "3:1";
           }
-
           // 3:2 split
           if (Math.abs((currClosePrice/prevOpenPricePrice) - 1.5) < 0.05) {
             didSplit = true;
@@ -113,7 +111,7 @@ public class Assignment1 {
 
           if (didSplit == true) {
             Split currSplit = new Split(
-            splitType, currDay.getDate(), currClosePrice, prevOpenPricePrice
+              splitType, currDay.getDate(), currClosePrice, prevOpenPricePrice
             );
             splits.add(currSplit);
           }
@@ -143,6 +141,7 @@ public class Assignment1 {
     }
   }
 
+  // This function prints the output for a given stock ticker to the screen
   private static void printOutput(ArrayList<Split> splits,
   ArrayList<StockDay> crazyDays, StockDay craziestDay) {
     int numCrazyDays = crazyDays.size();
@@ -178,7 +177,6 @@ public class Assignment1 {
       );
     }
     System.out.println("Total number of splits: " + numSplits);
-
   }
 
 }
