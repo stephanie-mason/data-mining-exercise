@@ -63,4 +63,11 @@ public class StockDay {
     return this.date;
   }
 
+  public float getOpeningPrice() {
+    return this.openingPrice;
+  }
+
+  public float getClosingPrice(){
+    return this.closingPrice;
+  }
 }
